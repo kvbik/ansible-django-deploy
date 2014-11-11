@@ -1,0 +1,12 @@
+# enable latest code
+# ~~~~~~~~~~~~~~~~~~
+- name: replace old virtualenv with new one
+  shell: >
+    rm -rf {{ env }}-old;
+    mv {{ env }} {{ env }}-old;
+    mv {{ env }}-new {{ env }};
+  args:
+    chdir: "{{ home }}"
+  sudo: yes
+  sudo_user: kvbik
+

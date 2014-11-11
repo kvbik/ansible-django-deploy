@@ -1,0 +1,40 @@
+# build env and prepare for distribution
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- name: update git repository
+  shell: >
+    git remote update;
+    git checkout {{ branch }};
+    git merge {{ branch }} origin/{{ branch }};
+  args:
+    chdir: "{{ home }}/{{ env }}/src/walksource"
+- name: build project
+  shell: >
+    ../../bin/pip install psycopg2 hiredis;
+    npm install;
+    ../../bin/python setup.py develop;
+    ../../bin/pip install -r requirements.txt;
+    ../../bin/python ../../bin/walksource collectstatic --noinput;
+  args:
+    chdir: "{{ home }}/{{ env }}/src/walksource"
+- name: clean up after build
+  shell: >
+    ls -td static/* | tail -n+6 | xargs rm -rf;
+  args:
+    chdir: "{{ home }}/{{ env }}/src/walksource"
+- name: pack whole virtualenv and wipe old tars
+  shell: >
+    mv {{ env }} {{ env }}-new;
+    tar cf {{ home }}/{{ env }}-{{ now }}.tar {{ env }}-new;
+    mv {{ env }}-new {{ env }};
+    ls -t {{ home }}/{{ env }}-*.tar | tail -n+6 | xargs rm -f;
+  args:
+    chdir: "{{ home }}"
+
+- name: get the tar to the master box
+  fetch: src={{ home }}/{{ env }}-{{ now }}.tar dest=/tmp/{{ env }}-download/{{ builder }}/ flat=yes
+
+- name: cleanup old tar on the master box
+  shell: >
+    ls -t /tmp/{{ env }}-download/*/{{ env }}-*.tar | tail -n+6 | xargs rm -f;
+  delegate_to: 127.0.0.1
+

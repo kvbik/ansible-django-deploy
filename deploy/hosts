@@ -1,0 +1,47 @@
+# prod boxes
+[prod-webs]
+web1.walksource.com
+web2.walksource.com
+
+[prod-lbs]
+lb1.walksource.com
+lb2.walksource.com
+
+[prod-infra]
+prod.walksource.com
+
+[prod:children]
+prod-webs
+prod-lbs
+prod-infra
+
+# stage boxes
+[stage-infra]
+stage.walksource.com
+
+[stage-webs]
+sweb1.walksource.com
+sweb2.walksource.com
+
+[stage-lbs]
+slb1.walksource.com
+slb2.walksource.com
+
+[stage:children]
+stage-webs
+stage-lbs
+stage-infra
+
+# all boxes
+[webs:children]
+prod-webs
+stage-webs
+
+[lbs:children]
+prod-lbs
+stage-lbs
+
+[infra:children]
+prod-infra
+stage-infra
+

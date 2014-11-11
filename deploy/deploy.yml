@@ -1,0 +1,23 @@
+- hosts: infra
+  remote_user: kvbik
+  tasks:
+    - include: tasks/build.yml
+
+- hosts: webs:lbs
+  remote_user: kvbik
+  tasks:
+    - include: tasks/distribute.yml
+
+- hosts: lbs
+  remote_user: root
+  tasks:
+    - include: tasks/enable.yml
+
+- hosts: webs
+  remote_user: root
+  serial: 1
+  tasks:
+    - include: tasks/pre-enable.yml
+    - include: tasks/enable.yml
+    - include: tasks/post-enable.yml
+

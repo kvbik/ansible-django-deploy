@@ -1,0 +1,7 @@
+# what to do after new code is enabled
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- name: start services
+  shell: >
+    supervisorctl start gunicorn-{{ env.replace('.', '-') }};
+    supervisorctl start celery-{{ env.replace('.', '-') }};
+

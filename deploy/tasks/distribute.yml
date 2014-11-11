@@ -1,0 +1,12 @@
+# deploy latest tar and prepare for upgrade
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- name: copy latest tar to all the boxes
+  copy: src=/tmp/{{ env }}-download/{{ builder }}/{{ env }}-{{ now }}.tar dest={{ home }}/{{ env }}-{{ now }}.tar
+
+- name: unpack virtualenv and wipe old tars
+  shell: >
+    tar xf {{ home }}/{{ env }}-{{ now }}.tar;
+    ls -t {{ home }}/{{ env }}-*.tar | tail -n+6 | xargs rm -f;
+  args:
+    chdir: "{{ home }}"
+

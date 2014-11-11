@@ -1,0 +1,7 @@
+# what to do before new code is enabled
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+- name: stop services
+  shell: >
+    supervisorctl stop gunicorn-{{ env.replace('.', '-') }};
+    supervisorctl stop celery-{{ env.replace('.', '-') }};
+
